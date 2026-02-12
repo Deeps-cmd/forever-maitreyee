@@ -6,6 +6,7 @@
     <title>Will you be my forever Maitreyee? 💕</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/confetti-js"></script>
     <style>
         * {
             margin: 0;
@@ -172,6 +173,47 @@
             animation: slideIn 0.3s ease-out;
         }
 
+        #success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 100;
+            animation: slideInSuccess 0.5s ease-out;
+            display: none;
+        }
+
+        #success-message.show {
+            display: block;
+        }
+
+        #success-message h2 {
+            font-size: 2rem;
+            color: #d63384;
+            margin-bottom: 10px;
+        }
+
+        #success-message p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        @keyframes slideInSuccess {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -227,6 +269,18 @@
                 width: 150px;
                 height: 150px;
             }
+
+            #success-message {
+                padding: 30px 40px;
+            }
+
+            #success-message h2 {
+                font-size: 1.5rem;
+            }
+
+            #success-message p {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -247,12 +301,18 @@
         <div id="tease-toast"></div>
     </div>
 
+    <div id="success-message">
+        <h2>Yay! You said yes! 💕</h2>
+        <p>You just made me the happiest person! 💕</p>
+    </div>
+
     <audio id="bg-music" loop autoplay muted>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <source src="https://drive.google.com/uc?export=download&id=1fZR_L7o2C4LU8ftVij1KrnSg93l2jqNz" type="audio/mpeg">
     </audio>
 
     <button id="music-toggle" onclick="toggleMusic()" title="Toggle music">🔊</button>
 
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
         const gifStages = [
             "https://media.tenor.com/EBV7OT7ACfwAAAAj/u-u-qua-qua-u-quaa.gif",
@@ -320,12 +380,17 @@
 
         function handleYesClick() {
             if (!runawayEnabled) {
-                const msg = yesTeasePokes[Math.min(yesTeasedCount, yesTeasePokes.length - 1)];
+                const msg = yesTeasePokes[Math.min(yeaTeasedCount, yesTeasePokes.length - 1)];
                 yesTeasedCount++;
                 showTeaseMessage(msg);
                 return;
             }
-            alert('Yay! You said yes! 💕');
+            // Show success message with animation
+            const successMsg = document.getElementById('success-message');
+            successMsg.classList.add('show');
+            
+            // Launch confetti
+            launchConfetti();
         }
 
         function showTeaseMessage(msg) {
@@ -359,6 +424,44 @@
                 const randomY = Math.random() * 200 - 100;
                 noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
             });
+        }
+
+        function launchConfetti() {
+            const colors = ['#ff69b4', '#ff1493', '#ff85a2', '#ffb3c1', '#ff0000', '#ff6347', '#fff', '#ffdf00'];
+            const duration = 6000;
+            const end = Date.now() + duration;
+
+            // Initial big burst
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { x: 0.5, y: 0.3 },
+                colors
+            });
+
+            // Continuous side cannons
+            const interval = setInterval(() => {
+                if (Date.now() > end) {
+                    clearInterval(interval);
+                    return;
+                }
+
+                confetti({
+                    particleCount: 40,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0, y: 0.6 },
+                    colors
+                });
+
+                confetti({
+                    particleCount: 40,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1, y: 0.6 },
+                    colors
+                });
+            }, 300);
         }
     </script>
 </body>
