@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Will you be my Forever Maitreyee?</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    background: linear-gradient(to right, #ff9a9e, #fecfef);
+    color: #d63384;
+    padding-top: 100px;
+    overflow: hidden;
+  }
+
+  h1 {
+    font-size: 40px;
+  }
+
+  button {
+    font-size: 20px;
+    margin: 15px;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  #yesBtn {
+    background-color: #ff4d6d;
+    color: white;
+  }
+
+  #yesBtn:hover {
+    background-color: #e60039;
+    transform: scale(1.1);
+  }
+
+  #noBtn {
+    background-color: white;
+    color: #ff4d6d;
+    position: absolute;
+  }
+</style>
+</head>
+<body>
+
+  <h1>Will you be my Forever Maitreyee? 💍❤️</h1>
+
+  <div>
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 😢</button>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+
+    noBtn.addEventListener("mouseover", function() {
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * window.innerHeight;
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    });
+
+    document.getElementById("yesBtn").onclick = () => {
+      document.body.innerHTML = `
+        <h1>Yayyyyy! ❤️✨</h1>
+        <h2>You just made me the happiest person alive 💍💖</h2>
+      `;
+    };
+  </script>
+
+</body>
+</html>
