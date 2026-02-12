@@ -306,8 +306,8 @@
         <p>You just made me the happiest person! 💕</p>
     </div>
 
-    <audio id="bg-music" loop autoplay muted>
-        <source src="https://drive.google.com/uc?export=download&id=1fZR_L7o2C4LU8ftVij1KrnSg93l2jqNz" type="audio/mpeg">
+    <audio id="bg-music" loop>
+        <source src="https://raw.githubusercontent.com/Deeps-cmd/forever-maitreyee/main/Sia%20-%20Snowman%20(Lyrics)%20_%20Let's%20go%20below%20zero%20and%20hide%20from%20the%20sun%20%5B6ikakT1sEQg%5D.mp3" type="audio/mpeg">
     </audio>
 
     <button id="music-toggle" onclick="toggleMusic()" title="Toggle music">🔊</button>
@@ -347,49 +347,56 @@
         let yesTeasedCount = 0;
         let noClickCount = 0;
         let runawayEnabled = false;
-        let musicPlaying = true;
+        let musicPlaying = false;
 
         const catGif = document.getElementById('cat-gif');
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
         const music = document.getElementById('bg-music');
+        const musicToggle = document.getElementById('music-toggle');
 
-        music.muted = true;
         music.volume = 0.3;
-        music.play().then(() => {
-            music.muted = false;
-        }).catch(() => {
-            document.addEventListener('click', () => {
-                music.muted = false;
-                music.play().catch(() => {});
-            }, { once: true });
-        });
+        
+        function attemptPlay() {
+            music.play().then(() => {
+                musicPlaying = true;
+                musicToggle.textContent = '🔊';
+            }).catch(err => {
+                console.log("Autoplay blocked, waiting for user interaction");
+            });
+        }
+
+        window.addEventListener('load', attemptPlay);
+        
+        document.addEventListener('click', () => {
+            if (!musicPlaying) {
+                music.play().catch(err => console.log("Play error:", err));
+                musicPlaying = true;
+                musicToggle.textContent = '🔊';
+            }
+        }, { once: true });
 
         function toggleMusic() {
             if (musicPlaying) {
                 music.pause();
                 musicPlaying = false;
-                document.getElementById('music-toggle').textContent = '🔇';
+                musicToggle.textContent = '🔇';
             } else {
-                music.muted = false;
-                music.play();
+                music.play().catch(err => console.log("Play error:", err));
                 musicPlaying = true;
-                document.getElementById('music-toggle').textContent = '🔊';
+                musicToggle.textContent = '🔊';
             }
         }
 
         function handleYesClick() {
             if (!runawayEnabled) {
-                const msg = yesTeasePokes[Math.min(yeaTeasedCount, yesTeasePokes.length - 1)];
+                const msg = yesTeasePokes[Math.min(yesTeasedCount, yesTeasePokes.length - 1)];
                 yesTeasedCount++;
                 showTeaseMessage(msg);
                 return;
             }
-            // Show success message with animation
             const successMsg = document.getElementById('success-message');
             successMsg.classList.add('show');
-            
-            // Launch confetti
             launchConfetti();
         }
 
@@ -431,7 +438,6 @@
             const duration = 6000;
             const end = Date.now() + duration;
 
-            // Initial big burst
             confetti({
                 particleCount: 150,
                 spread: 100,
@@ -439,7 +445,6 @@
                 colors
             });
 
-            // Continuous side cannons
             const interval = setInterval(() => {
                 if (Date.now() > end) {
                     clearInterval(interval);
